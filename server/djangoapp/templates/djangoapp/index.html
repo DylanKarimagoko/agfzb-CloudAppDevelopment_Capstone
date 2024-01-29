@@ -26,6 +26,23 @@
                 </li>
             </ul>
         </div>
+
+    {% if user.is_authenticated %}
+    <li>
+         <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+         <a class="btn btn-link" href="{% url 'djangoapp:logout_request' %}">Logout</a>
+    </li>
+    {% else %}
+
+        <form class="form-inline" action="{% url 'djangoapp:login_request' %}" method="post">
+            <input class="form-control mr-sm-2" type="text" placeholder="Username" name="username">
+            <input class="form-control mr-sm-2" type="text" placeholder="Password" name="password">
+            <button class="btn my-2 my-sm-0 text-white" type="submit">Login</button>
+            <a class="btn btn-link" href="{% url 'djangoapp:registration_request' %}">Sign Up</a>
+          </form>
+
+    
+    {% endif %}
     
     </nav>
     <!--Add a dealer table here -->

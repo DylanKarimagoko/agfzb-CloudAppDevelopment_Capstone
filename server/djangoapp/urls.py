@@ -14,10 +14,11 @@ urlpatterns = [
     # path for contact us view
     path(route="djangoapp/contact",view=views.contact, name="contact"),
     # path for registration
-
+    path(route="djangoapp/registration_request", view=views.registration_request, name="registration_request"),
     # path for login
-
+    path(route="djangoapp/login_request", view=views.login_request, name="login_request"),
     # path for logout
+    path(route="djangoapp/logout_request", view=views.logout_request,name="logout_request"),
 
     path(route='', view=views.get_dealerships, name='index'),
 

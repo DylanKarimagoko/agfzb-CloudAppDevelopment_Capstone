@@ -9,29 +9,38 @@ from requests.auth import HTTPBasicAuth
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
 #                                     auth=HTTPBasicAuth('apikey', api_key))
 
-def get_request(url, **kwargs):
+def get_request(url,api_key, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
+
     try:
         # Call get method of requests library with URL and parameters
-        if api_key:
+        if api_key is not None:
             params = dict()
             params["text"] = kwargs["text"]
             params["version"] = kwargs["version"]
             params["features"] = kwargs["features"]
             params["return_analyzed_text"] = kwargs["return_analyzed_text"]
-            response requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+            response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
                                     auth=HTTPBasicAuth('apikey', api_key))
+            status_code = response.status_code
+            print("With status {} ".format(status_code))
+            json_data = json.loads(response.text)
+            return json_data
         else:
             response = requests.get(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs)
-    except:
+            status_code = response.status_code
+            print("With status {} ".format(status_code))
+            json_data = json.loads(response.text)
+            return json_data
+    except Exception as e:
         # If any error occurs
+        print("error below")
+        print(e)
         print("Network exception occurred")
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
-    json_data = json.loads(response.text)
-    return json_data
+    return
+ 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 
@@ -44,7 +53,7 @@ def get_request(url, **kwargs):
 def get_dealers_from_cf(url, **kwargs):
     results = []
     # Call get_request with a URL parameter
-    json_result = get_request(url)
+    json_result = get_request(url,None)
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result
@@ -63,7 +72,7 @@ def get_dealers_from_cf(url, **kwargs):
 
 def get_dealer_reviews_from_cf(url,dealer_id):
     results = []
-    json_result = get_request(url,id=dealer_id)
+    json_result = get_request(url,None,id=dealer_id)
     if json_result:
         reviews = json_result
         for review in reviews:
@@ -79,8 +88,9 @@ def get_dealer_reviews_from_cf(url,dealer_id):
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 def analyze_review_sentiments(text):
+    #debug this
     url = "https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/e02799f2-7f08-4844-9824-359e5dbc5a5a"
-    results = get_request(url,text=text,version="2022-04-07",features=)
+    results = get_request(url,"0_zolZv6PbOSScBGDswvGxrWBSbj9jtMEjGH13LrOmfL",text=text,version="2022-04-07",features=True,return_analyzed_text=True)
     print(results)
     return results
 

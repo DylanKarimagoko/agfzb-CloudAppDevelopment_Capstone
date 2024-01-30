@@ -14,7 +14,16 @@ def get_request(url, **kwargs):
     print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
+        if api_key:
+            params = dict()
+            params["text"] = kwargs["text"]
+            params["version"] = kwargs["version"]
+            params["features"] = kwargs["features"]
+            params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+            response requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+                                    auth=HTTPBasicAuth('apikey', api_key))
+        else:
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs)
     except:
         # If any error occurs
@@ -60,6 +69,7 @@ def get_dealer_reviews_from_cf(url,dealer_id):
         for review in reviews:
             review_obj = DealerReview(id=review["id"], name=review['name'],dealership=review['dealership'],
             purchase=review['purchase'], review=review['review'], purchase_date=review["purchase_date"],car_make=review['car_make'], car_model=review['car_model'], car_year=review['car_year'], sentiment="place_holder")
+            review_obj.sentiment = analyze_review_sentiments(review_obj.review)
             results.append(review_obj)
     return results
 # def get_dealer_by_id_from_cf(url, dealerId):
@@ -68,7 +78,10 @@ def get_dealer_reviews_from_cf(url,dealer_id):
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-# def analyze_review_sentiments(text):
+def analyze_review_sentiments(text):
+    #finish up
+    results = get_request()
+
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
 

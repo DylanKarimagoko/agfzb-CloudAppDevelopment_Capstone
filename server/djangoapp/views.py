@@ -102,5 +102,20 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
+
+def add_review(request, dealer_id):
+    if request.user.is_authenticated:
+        username = request.user.username
+        review = {}
+        review["time"] = datetime.utcnow().isoformat()
+        review["name"] = username
+        review['id'] = dealer_id
+        review['dealership'] = dealer_id
+        review['review'] = request.POST['content']
+        review['purchase'] = True
+        review['purchase_date'] = request.POST['purchasedate']
+        review['car_make'] = request.POST['car_make']
+        review['car_model'] = request.POST['car_model']
+        review['car_year'] = request.POST['car_year']
 # ...
 

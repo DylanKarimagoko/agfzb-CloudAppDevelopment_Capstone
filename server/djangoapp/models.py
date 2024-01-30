@@ -19,13 +19,18 @@ class CarMake(models.Model):
     
 
 class CarModel(models.Model):
+    TYPE = [
+        ("sedan","Sedan"),
+        ("suv", "SUV"),
+        ("wagon", "Wagon")
+    ]
     car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     dealer_id = models.CharField(max_length=10)
-    type = models.CharField(max_length=100)
+    type = models.CharField(max_length=100, choices=TYPE)
     year = models.DateField()
     def __str__(self):
-        return self.name + " "  + self.type + " " + self.year + " " + self.car_make
+        return self.name + " "  + self.type  + " " + self.dealer_id 
 # <HINT> Create a Car Model model `class CarModel(models.Model):`:
 # - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
 # - Name

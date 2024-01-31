@@ -24,7 +24,7 @@ urlpatterns = [
 
     # path for dealer reviews view
     path(route="djangoapp/dealer/<int:dealer_id>/", view=views.get_dealer_details, name='dealer'),
-    path('djangoapp/add_review/<int:id>', view=views.add_review, name='add_review'),
+    path(route='djangoapp/add_review/<int:dealer_id>', view=views.add_review, name='add_review'),
     # path for add a review view
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

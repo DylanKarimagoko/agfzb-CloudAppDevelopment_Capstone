@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 # from .restapis import related methods
-from .restapis import get_dealers_from_cf,get_dealer_reviews_from_cf
+from .models import CarModel
+from .restapis import get_dealers_from_cf,get_dealer_reviews_from_cf,post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -108,18 +109,34 @@ def get_dealer_details(request, dealer_id):
 # def add_review(request, dealer_id):
 
 def add_review(request, dealer_id):
-    if request.user.is_authenticated:
+    print("hello")
+    if request.method == 'GET':
+        cars = CarModel.objects.all()
+        context = {}
+        context['cars'] = cars
+        context['id'] = dealer_id
+        return render(request, 'djangoapp/add_review.html', context)
+    elif request.method == 'POST':
         username = request.user.username
+        purchase = request.POST.get('purchased')
+        print(purchase)
         review = {}
-        review["time"] = datetime.utcnow().isoformat()
+        car_id = request.POST.get("car")
+        car = CarModel.objects.get(pk=car_id)
         review["name"] = username
         review['id'] = dealer_id
         review['dealership'] = dealer_id
-        review['review'] = request.POST['content']
-        review['purchase'] = True
-        review['purchase_date'] = request.POST['purchasedate']
-        review['car_make'] = request.POST['car_make']
-        review['car_model'] = request.POST['car_model']
-        review['car_year'] = request.POST['car_year']
+        review['review'] = request.POST.get('review')
+        review['purchase'] = False
+        if purchase == 'on':
+            review['purchase'] = True
+            review['purchase_date'] = request.POST.get('date')
+            review['car_make'] = car.car_make.name
+            review['car_model'] = "Car"
+            review['car_year'] = int(car.year.strftime("%Y"))
+        #print(payload)
+        url = "https://dylankarimag-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
+        post_request(url, review, id=dealer_id)
+        return redirect('djangoapp:dealer', dealer_id=dealer_id)
 # ...
 

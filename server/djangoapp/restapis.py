@@ -49,6 +49,7 @@ def get_request(url,api_key, **kwargs):
 
 def post_request(url, json_payload, **kwargs):
     print(json_payload)
+    print("here")
     print("POST from {} ".format(url))
     try:
         response=requests.post(url, params=kwargs, json=json_payload)

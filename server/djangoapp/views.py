@@ -85,16 +85,19 @@ def get_dealerships(request):
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        context = {}
+        context["dealerships_list"] = dealerships
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        return render(request,'djangoapp/index.html',context )
 
 def get_dealer_details(request, dealer_id):
     if request.method == "GET":
         url = "https://dylankarimag-5000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews"
         reviews = get_dealer_reviews_from_cf(url,dealer_id)
         print(reviews)
-        return HttpResponse(reviews)
+        context = {}
+        context['reviews_list'] = reviews
+        return render(request, 'djangoapp/dealer_details.html', context)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):

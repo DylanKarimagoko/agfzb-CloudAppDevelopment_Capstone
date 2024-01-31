@@ -25,7 +25,7 @@
     {% if user.is_authenticated %}
     <li>
          <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
-         <a class="btn btn-link" href="{% url 'djangoapp:add_review' %}">Add review</a>
+         <a class="btn btn-link" href="{% url 'djangoapp:add_review' id %}">Add review</a>
          <a class="btn btn-link" href="{% url 'djangoapp:logout_request' %}">Logout</a>
     </li>
     {% else %}
@@ -43,6 +43,41 @@
     </nav>
 
     <!-- Add reviews as cards -->
+    <h1>Reviews for dealership</h1>
+    <div style="width: 100vw;height: 80vh">
+        {% if reviews_list %}
+    <div class="card-columns">
+
+        {% for review in reviews_list %}
+        <div class="card text-dark bg-light mb-3 text-left" style="width: 18rem;height: 15rem">
+            {% if review.sentiment == "positive" %}
+            <img class="card-img-left" src="{{MEDIA_URL}}/emoji/positive.png"/>
+            {% elif review.sentiment == "neutral" %}
+            <img class="card-img-left" src="{{MEDIA_URL}}/emoji/neutral.png"/>
+            {% elif review.sentiment == "negative" %}
+            <img class="card-img-left" src="{{MEDIA_URL}}/emoji/negative.png"/>
+            {% endif %}
+
+            <div class="card-body bg-light">
+                
+                <label class="card-title">{{review.review}}</label>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+    <div class="row h-100 w-100 justify-content-center align-items-center">
+        <div class="card text-center" style="width: 20rem; height: 15rem">
+            <div class="card-body bg-light">
+                <h5 class="card-title">No reviews found</h5>
+                <a class="btn btn-link" href="{% url 'djangoapp:add_review' id %}">Add review</a>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+</div>
 
     </body>
 

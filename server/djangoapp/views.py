@@ -97,6 +97,7 @@ def get_dealer_details(request, dealer_id):
         print(reviews)
         context = {}
         context['reviews_list'] = reviews
+        context['id'] = dealer_id
         return render(request, 'djangoapp/dealer_details.html', context)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
